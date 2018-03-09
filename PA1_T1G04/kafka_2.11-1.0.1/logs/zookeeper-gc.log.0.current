@@ -1,8 +1,8 @@
-Java HotSpot(TM) 64-Bit Server VM (25.161-b12) for linux-amd64 JRE (1.8.0_161-b12), built on Dec 19 2017 16:12:43 by "java_re" with gcc 4.3.0 20080428 (Red Hat 4.3.0-8)
-Memory: 4k page, physical 8078056k(1483000k free), swap 8298492k(8298492k free)
+OpenJDK 64-Bit Server VM (25.162-b01) for linux-amd64 JRE (1.8.0_162-b01), built on Feb 15 2018 01:35:40 by "builder" with gcc 7.2.1 20180116
+Memory: 4k page, physical 4043684k(632712k free), swap 0k(0k free)
 CommandLine flags: -XX:+ExplicitGCInvokesConcurrent -XX:GCLogFileSize=104857600 -XX:InitialHeapSize=536870912 -XX:InitiatingHeapOccupancyPercent=35 -XX:+ManagementServer -XX:MaxGCPauseMillis=20 -XX:MaxHeapSize=536870912 -XX:NumberOfGCLogFiles=10 -XX:+PrintGC -XX:+PrintGCDateStamps -XX:+PrintGCDetails -XX:+PrintGCTimeStamps -XX:+UseCompressedClassPointers -XX:+UseCompressedOops -XX:+UseG1GC -XX:+UseGCLogFileRotation 
 Heap
- garbage-first heap   total 524288K, used 20480K [0x00000000e0000000, 0x00000000e0101000, 0x0000000100000000)
-  region size 1024K, 21 young (21504K), 0 survivors (0K)
- Metaspace       used 10151K, capacity 10356K, committed 10496K, reserved 1058816K
-  class space    used 1195K, capacity 1258K, committed 1280K, reserved 1048576K
+ garbage-first heap   total 524288K, used 18432K [0x00000000e0000000, 0x00000000e0101000, 0x0000000100000000)
+  region size 1024K, 19 young (19456K), 0 survivors (0K)
+ Metaspace       used 9704K, capacity 9890K, committed 10240K, reserved 1058816K
+  class space    used 1118K, capacity 1185K, committed 1280K, reserved 1048576K

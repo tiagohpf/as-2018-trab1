@@ -51,12 +51,12 @@ public class FileParser {
     }
     
     //Main for test
-    public static void main(String [] args) throws FileNotFoundException{
-        FileParser p = new FileParser("some_files/1.txt");
+    /*public static void main(String [] args) throws FileNotFoundException{
+        FileParser p = new FileParser("src/Data/HB.txt");
         p.readFile();
         ArrayList<String> x = p.info.getMessages();
         for(String s : x){
             System.out.println(s);
         }
-    }
+    }*/
 }
