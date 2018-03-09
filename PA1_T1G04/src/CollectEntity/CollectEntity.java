@@ -6,8 +6,16 @@
 package CollectEntity;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.ArrayList;
+import java.util.Properties;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileView;
+import org.apache.kafka.clients.producer.KafkaProducer;
+import org.apache.kafka.clients.producer.Producer;
+import org.apache.kafka.clients.producer.ProducerRecord;
 
 /**
  *
@@ -79,7 +87,6 @@ public class CollectEntity extends javax.swing.JFrame {
 
         //Locked Directory
         File dir = new File(System.getProperty("user.dir") + "/src/Data");
-        
         //Create File Chooser
         JFileChooser jfc = new JFileChooser(dir);
         jfc.setFileView(new FileView() {
@@ -89,8 +96,38 @@ public class CollectEntity extends javax.swing.JFrame {
             }
         });
         if (jfc.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
-            File selectedFile = jfc.getSelectedFile();
-            jTextArea1.append("Selected File "+selectedFile.getName());
+            jTextArea1.append("Selected File " + jfc.getSelectedFile().getName());
+        }
+
+        //Get messages from file
+        FileParser p = new FileParser(jfc.getSelectedFile().getAbsolutePath());
+        try {
+            p.readFile();
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(CollectEntity.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        //Produce messages to topic EnrichTopic
+        String topicName = "EnrichTopic";
+        String key = jfc.getSelectedFile().getName();
+
+        if (key.equals("HB.txt")) {
+            //Properties
+            Properties props = new Properties();
+            props.put("bootstrap.servers", "localhost:9092,localhost:9093");
+            props.put("key.serializer", "org.apache.kafka.common.serialization.StringSerializer");
+            props.put("value.serializer", "CollectEntity.MessagesSerializer");
+
+            //Fire and forget example
+            Producer<String, Messages> producer = new KafkaProducer<>(props);
+
+            ProducerRecord<String, Messages> record = new ProducerRecord<>(topicName, key, p.getInfo());
+            producer.send(record);
+            producer.close();
+            jTextArea1.append("\n" + p.getInfo().toString());
+            jTextArea1.append("Messages Sent\n");
+        } else {
+            System.out.println("Nada");
         }
     }//GEN-LAST:event_jButton1ActionPerformed
 

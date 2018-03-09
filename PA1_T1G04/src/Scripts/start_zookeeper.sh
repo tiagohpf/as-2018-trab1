@@ -1,8 +1,5 @@
 #!/bin/bash
 
-konsole -e "ls"
-exit
-
 cd ..
 cd ..
 

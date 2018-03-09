@@ -27,6 +27,14 @@ public class Messages {
     public void setMessages(ArrayList<String> messages) {
         this.messages = messages;
     }
+
+    public String toString() {
+        String output = "";
+        for (String s : messages){
+            output+=s + "\n";
+        }
+        return output;
+    }
     
     
 }
