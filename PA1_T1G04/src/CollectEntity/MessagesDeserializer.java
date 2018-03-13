@@ -16,7 +16,7 @@ import org.apache.kafka.common.serialization.Deserializer;
  *
  * @author kanto
  */
-public class MessagesDeserializer implements Deserializer<Messages>{
+public class MessagesDeserializer implements Deserializer<Message>{
 
     @Override
     public void configure(Map<String, ?> map, boolean bln) {
@@ -24,11 +24,11 @@ public class MessagesDeserializer implements Deserializer<Messages>{
     }
 
     @Override
-    public Messages deserialize(String string, byte[] bytes) {
+    public Message deserialize(String string, byte[] bytes) {
         ObjectMapper mapper = new ObjectMapper();
-        Messages m = null;
+        Message m = null;
         try{
-            m = mapper.readValue(bytes, Messages.class);
+            m = mapper.readValue(bytes, Message.class);
         } catch (IOException ex) {
             Logger.getLogger(MessagesDeserializer.class.getName()).log(Level.SEVERE, null, ex);
         }

@@ -18,11 +18,11 @@ public class FileParser {
 
     //Vars
     private File file;
-    private Messages info;
+    private ArrayList<Message> info;
 
     public FileParser(String s) {
         file = new File(s);
-        info = new Messages();
+        info = new ArrayList<>();
     }
 
     //Reads data into info
@@ -30,7 +30,7 @@ public class FileParser {
         //Separated by comma
         Scanner sc = new Scanner(file).useDelimiter(";");
         while (sc.hasNextLine()) {
-            info.getMessages().add(sc.nextLine());
+            info.add(new Message(sc.nextLine()));
         }
     }
 
@@ -42,11 +42,11 @@ public class FileParser {
         this.file = file;
     }
 
-    public Messages getInfo() {
+    public ArrayList<Message> getInfo() {
         return info;
     }
 
-    public void setInfo(Messages info) {
+    public void setInfo(ArrayList<Message> info) {
         this.info = info;
     }
     

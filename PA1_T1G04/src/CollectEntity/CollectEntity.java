@@ -100,9 +100,9 @@ public class CollectEntity extends javax.swing.JFrame {
         }
 
         //Get messages from file
-        FileParser p = new FileParser(jfc.getSelectedFile().getAbsolutePath());
+        FileParser fp = new FileParser(jfc.getSelectedFile().getAbsolutePath());
         try {
-            p.readFile();
+            fp.readFile();
         } catch (FileNotFoundException ex) {
             Logger.getLogger(CollectEntity.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -119,13 +119,15 @@ public class CollectEntity extends javax.swing.JFrame {
             props.put("value.serializer", "CollectEntity.MessagesSerializer");
 
             //Fire and forget example
-            Producer<String, Messages> producer = new KafkaProducer<>(props);
+            Producer<String, Message> producer = new KafkaProducer<>(props);
 
-            ProducerRecord<String, Messages> record = new ProducerRecord<>(topicName, key, p.getInfo());
-            producer.send(record);
+            for (Message message : fp.getInfo()) {
+                ProducerRecord<String, Message> record = new ProducerRecord<>(topicName, key, message);
+                producer.send(record);
+                jTextArea1.append("\n" + message.getMessages());
+            }
             producer.close();
-            jTextArea1.append("\n" + p.getInfo().toString());
-            jTextArea1.append("Messages Sent\n");
+            jTextArea1.append("\nMessages Sent\n");
         } else {
             System.out.println("Nada");
         }

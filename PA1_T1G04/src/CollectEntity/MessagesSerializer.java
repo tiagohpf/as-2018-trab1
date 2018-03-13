@@ -13,14 +13,14 @@ import org.apache.kafka.common.serialization.Serializer;
  *
  * @author kanto
  */
-public class MessagesSerializer implements Serializer<Messages> {
+public class MessagesSerializer implements Serializer<Message> {
 
     @Override
     public void configure(Map<String, ?> map, boolean bln) {
     }
 
     @Override
-    public byte[] serialize(String string, Messages m) {
+    public byte[] serialize(String string, Message m) {
         if (m == null) {
             return null;
         }
