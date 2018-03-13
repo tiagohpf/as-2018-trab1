@@ -13,16 +13,20 @@ public class Message {
       
     //Vars
     private String message;
+
+    public Message() {
+    }
     
     public Message(String message){
         this.message = message;
     }
 
-    public  String getMessages() {
+    public String getMessage() {
         return message;
     }
 
     public void setMessage(String message) {
         this.message = message;
-    }    
+    }
+    
 }

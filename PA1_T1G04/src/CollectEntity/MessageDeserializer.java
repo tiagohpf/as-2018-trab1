@@ -5,6 +5,7 @@
  */
 package CollectEntity;
 
+import CollectEntity.Message;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import java.util.Map;
@@ -16,11 +17,10 @@ import org.apache.kafka.common.serialization.Deserializer;
  *
  * @author kanto
  */
-public class MessagesDeserializer implements Deserializer<Message>{
+public class MessageDeserializer implements Deserializer<Message>{
 
     @Override
     public void configure(Map<String, ?> map, boolean bln) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
@@ -30,7 +30,7 @@ public class MessagesDeserializer implements Deserializer<Message>{
         try{
             m = mapper.readValue(bytes, Message.class);
         } catch (IOException ex) {
-            Logger.getLogger(MessagesDeserializer.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(MessageDeserializer.class.getName()).log(Level.SEVERE, null, ex);
         }
         
         if(m == null){
@@ -41,7 +41,6 @@ public class MessagesDeserializer implements Deserializer<Message>{
 
     @Override
     public void close() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     
 }

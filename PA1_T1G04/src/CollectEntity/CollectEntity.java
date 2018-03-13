@@ -7,7 +7,6 @@ package CollectEntity;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.util.ArrayList;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -116,18 +115,20 @@ public class CollectEntity extends javax.swing.JFrame {
         Properties props = new Properties();
         props.put("bootstrap.servers", "localhost:9092,localhost:9093");
         props.put("key.serializer", "org.apache.kafka.common.serialization.StringSerializer");
-        props.put("value.serializer", "CollectEntity.MessagesSerializer");
+        props.put("value.serializer", "CollectEntity.MessageSerializer");
         Producer<String, Message> producer = new KafkaProducer<>(props);
 
         if (key.equals("HB.txt")) {
+            props.put("acks","0");
             //Fire and forget example
             for (Message message : fp.getInfo()) {
                 ProducerRecord<String, Message> record = new ProducerRecord<>(topicName, key, message);
                 producer.send(record);
-                jTextArea1.append("\n" + message.getMessages());
+                jTextArea1.append("\n" + message.getMessage());
             }
             jTextArea1.append("\nMessages Sent\n");
         } else if (key.equals("SPEED.txt") || key.equals("STATUS.txt")) {
+            props.put("acks","all");
             for (Message message : fp.getInfo()) {
                 ProducerRecord<String, Message> record = new ProducerRecord<>(topicName, key, message);
                 try {
@@ -135,7 +136,7 @@ public class CollectEntity extends javax.swing.JFrame {
                 } catch (Exception e) {
                     System.err.println("Synchronous fail!");
                 }
-                jTextArea1.append("\n" + message.getMessages());
+                jTextArea1.append("\n" + message.getMessage());
             }
             jTextArea1.append("\nMessages Sent\n");
         }

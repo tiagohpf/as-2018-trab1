@@ -5,24 +5,13 @@
  */
 package DigestionEntity;
 
-import CollectEntity.FileParser;
 import CollectEntity.Message;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.util.ArrayList;
+import CollectEntity.Message;
 import java.util.Arrays;
 import java.util.Properties;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.swing.JFileChooser;
-import javax.swing.filechooser.FileView;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
-import org.apache.kafka.clients.producer.KafkaProducer;
-import org.apache.kafka.clients.producer.Producer;
-import org.apache.kafka.clients.producer.ProducerRecord;
-import org.apache.kafka.clients.producer.RecordMetadata;
 
 /**
  *
@@ -31,7 +20,7 @@ import org.apache.kafka.clients.producer.RecordMetadata;
 public class DigestionEntity extends javax.swing.JFrame {
 
     /**
-     * Creates new form CollectEntity
+     * Creates new form DigestionEntity
      */
     public DigestionEntity() {
         initComponents();
@@ -59,17 +48,17 @@ public class DigestionEntity extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 376, Short.MAX_VALUE)
-                .addContainerGap())
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(40, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 327, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(33, 33, 33))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(21, Short.MAX_VALUE)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 274, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+            .addGroup(layout.createSequentialGroup()
+                .addGap(48, 48, 48)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 199, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(53, Short.MAX_VALUE))
         );
 
         pack();
@@ -101,10 +90,10 @@ public class DigestionEntity extends javax.swing.JFrame {
             java.util.logging.Logger.getLogger(DigestionEntity.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
-        //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
+            @Override
             public void run() {
                 new DigestionEntity().setVisible(true);
 
@@ -114,23 +103,31 @@ public class DigestionEntity extends javax.swing.JFrame {
                 //Properties
                 Properties props = new Properties();
                 props.put("bootstrap.servers", "localhost:9092,localhost:9093");
+                props.put("group.id", groupConsumerName);
                 props.put("key.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
-                props.put("value.deserializer", "CollectEntity.MessagesDeserializer");
-                
+                props.put("value.deserializer", "CollectEntity.MessageDeserializer");
+
                 KafkaConsumer<String, Message> consumer = new KafkaConsumer<>(props);
                 consumer.subscribe(Arrays.asList(topicConsumerName));
-                
-                while (true) {
-                    ConsumerRecords<String, Message> records = consumer.poll(100);
-                    for (ConsumerRecord<String, Message> record : records)
-                        System.out.println(record.value().getMessages() + "\n");
-                }
+
+                //Tudo o que aparece dentro da text área é tratado aqui, inclusive o consumidor para outras coisas.
+                Thread thread = new Thread() {
+                    public void run() {
+                        while (true) {
+                            ConsumerRecords<String, Message> records = consumer.poll(100);
+                            for (ConsumerRecord<String, Message> record : records) {
+                                jTextArea1.append(record.value().getMessage()+"\n");
+                            }
+                        }
+                    }
+                };
+                thread.start();
             }
         });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTextArea jTextArea1;
+    private static javax.swing.JTextArea jTextArea1;
     // End of variables declaration//GEN-END:variables
 }

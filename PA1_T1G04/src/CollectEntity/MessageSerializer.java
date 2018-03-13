@@ -13,7 +13,7 @@ import org.apache.kafka.common.serialization.Serializer;
  *
  * @author kanto
  */
-public class MessagesSerializer implements Serializer<Message> {
+public class MessageSerializer implements Serializer<Message> {
 
     @Override
     public void configure(Map<String, ?> map, boolean bln) {
@@ -26,7 +26,7 @@ public class MessagesSerializer implements Serializer<Message> {
         }
         try {
             ObjectMapper objectMapper = new ObjectMapper();
-            return objectMapper.writeValueAsString(m).getBytes();
+            return objectMapper.writeValueAsBytes(m);
 
         } catch (Exception e) {
             System.out.println(e.getMessage());
