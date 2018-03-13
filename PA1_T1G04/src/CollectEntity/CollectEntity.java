@@ -16,6 +16,7 @@ import javax.swing.filechooser.FileView;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.Producer;
 import org.apache.kafka.clients.producer.ProducerRecord;
+import org.apache.kafka.clients.producer.RecordMetadata;
 
 /**
  *
@@ -111,26 +112,34 @@ public class CollectEntity extends javax.swing.JFrame {
         String topicName = "EnrichTopic";
         String key = jfc.getSelectedFile().getName();
 
+        //Properties
+        Properties props = new Properties();
+        props.put("bootstrap.servers", "localhost:9092,localhost:9093");
+        props.put("key.serializer", "org.apache.kafka.common.serialization.StringSerializer");
+        props.put("value.serializer", "CollectEntity.MessagesSerializer");
+        Producer<String, Message> producer = new KafkaProducer<>(props);
+
         if (key.equals("HB.txt")) {
-            //Properties
-            Properties props = new Properties();
-            props.put("bootstrap.servers", "localhost:9092,localhost:9093");
-            props.put("key.serializer", "org.apache.kafka.common.serialization.StringSerializer");
-            props.put("value.serializer", "CollectEntity.MessagesSerializer");
-
             //Fire and forget example
-            Producer<String, Message> producer = new KafkaProducer<>(props);
-
             for (Message message : fp.getInfo()) {
                 ProducerRecord<String, Message> record = new ProducerRecord<>(topicName, key, message);
                 producer.send(record);
                 jTextArea1.append("\n" + message.getMessages());
             }
-            producer.close();
             jTextArea1.append("\nMessages Sent\n");
-        } else {
-            System.out.println("Nada");
+        } else if (key.equals("SPEED.txt") || key.equals("STATUS.txt")) {
+            for (Message message : fp.getInfo()) {
+                ProducerRecord<String, Message> record = new ProducerRecord<>(topicName, key, message);
+                try {
+                    RecordMetadata metadata = producer.send(record).get();
+                } catch (Exception e) {
+                    System.err.println("Synchronous fail!");
+                }
+                jTextArea1.append("\n" + message.getMessages());
+            }
+            jTextArea1.append("\nMessages Sent\n");
         }
+        producer.close();
     }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
