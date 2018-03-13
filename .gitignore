@@ -1,3 +1,6 @@
+# Ignore logs of Kafka
+PA1_T1G04/kafka_2.11-1.0.1/logs/
+
 
 # Created by https://www.gitignore.io/api/java,netbeans,intellij
 
