@@ -6,7 +6,6 @@
 package DigestionEntity;
 
 import CollectEntity.Message;
-import CollectEntity.Message;
 import java.util.Arrays;
 import java.util.Properties;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
@@ -101,13 +100,13 @@ public class DigestionEntity extends javax.swing.JFrame {
                 String groupConsumerName = "EnrichTopicGroup";
 
                 //Properties
-                Properties props = new Properties();
-                props.put("bootstrap.servers", "localhost:9092,localhost:9093");
-                props.put("group.id", groupConsumerName);
-                props.put("key.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
-                props.put("value.deserializer", "CollectEntity.MessageDeserializer");
+                Properties propsConsumer = new Properties();
+                propsConsumer.put("bootstrap.servers", "localhost:9092,localhost:9093");
+                propsConsumer.put("group.id", groupConsumerName);
+                propsConsumer.put("key.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
+                propsConsumer.put("value.deserializer", "CollectEntity.MessageDeserializer");
 
-                KafkaConsumer<String, Message> consumer = new KafkaConsumer<>(props);
+                KafkaConsumer<String, Message> consumer = new KafkaConsumer<>(propsConsumer);
                 consumer.subscribe(Arrays.asList(topicConsumerName));
 
                 //Tudo o que aparece dentro da text área é tratado aqui, inclusive o consumidor para outras coisas.
