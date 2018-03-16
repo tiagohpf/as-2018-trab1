@@ -96,7 +96,7 @@ public class DigestionEntity extends javax.swing.JFrame {
                 break;
             case "01":
                 Batchprops.put("acks", "all");
-                record = new ProducerRecord<>(topicName, key, message);
+                record = new ProducerRecord<>("EnrichedTopic2", key, message);
                 Batchproducer.send(record);
                 jTextArea1.append("\nSending " + message.getMessage() + "\n");
                 break;
@@ -164,7 +164,7 @@ public class DigestionEntity extends javax.swing.JFrame {
                             ConsumerRecords<String, Message> records = consumer.poll(100);
                             for (ConsumerRecord<String, Message> record : records) {
                                 jTextArea1.append(record.value().getMessage() + "\n");
-                                record.value().enrichMessage();
+                                record.value().enrichMessageWithReg();
                                 sendMessage(record.value());
                                 //commit offsets 
                                 if (!isHB(record.value())) {
