@@ -1,5 +1,8 @@
 package CollectEntity;
 
+import java.text.DecimalFormat;
+import java.util.Random;
+
 /**
  *
  * @author José Santos
@@ -23,4 +26,36 @@ public class Message {
         this.message = message;
     }
     
+    public String enrichMessage(String data) {
+        StringBuilder enrichedMessage = new StringBuilder();
+        String[] fields = data.split(";");
+        // Add car_id and time
+        enrichedMessage.append(fields[0]).append(";").append(fields[1]).append(";");
+        enrichedMessage.append(generateRegist(fields[0])).append(";");
+        for (int i = 2; i < fields.length; i++) {
+            if (i < fields.length - 1) {
+                enrichedMessage.append(fields[i]).append(";");
+            } else {
+                enrichedMessage.append(fields[i]);
+            }
+        }
+        return enrichedMessage.toString();
+    }
+            
+    private String generateRegist(String car_id) {
+        StringBuilder regist = new StringBuilder();
+        Random random = new Random();
+        // Regist XX-YY
+        for (int i = 0; i < 5; i++) {
+            if (i == 2)
+                regist.append("-");
+            else {
+                char letter = (char) (random.nextInt(26) + 'A');
+                regist.append(Character.toString(letter));
+            }
+        }
+        String new_car_id = new DecimalFormat("00").format(Integer.parseInt(car_id));
+        // Regist XX-YY-ZZ
+        return regist.append("-").append(new_car_id).toString();
+    }
 }
