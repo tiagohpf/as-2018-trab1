@@ -1,20 +1,18 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package DigestionEntity;
 
 import CollectEntity.Message;
+import java.text.DecimalFormat;
 import java.util.Arrays;
 import java.util.Properties;
+import java.util.Random;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
 
 /**
  *
- * @author kanto
+ * @author José Santos
+ * @author Tiago Faria
  */
 public class DigestionEntity extends javax.swing.JFrame {
 
@@ -115,12 +113,45 @@ public class DigestionEntity extends javax.swing.JFrame {
                         while (true) {
                             ConsumerRecords<String, Message> records = consumer.poll(100);
                             for (ConsumerRecord<String, Message> record : records) {
-                                jTextArea1.append(record.value().getMessage()+"\n");
+                                String message = record.value().getMessage();
+                                jTextArea1.append(message + "\n");
                             }
                         }
                     }
                 };
                 thread.start();
+            }
+            
+            private String enrichMessage(String message) {
+                StringBuilder enrichedMessage = new StringBuilder();
+                String []fields = message.split(";");
+                // Add car_id and time
+                enrichedMessage.append(fields[0]).append(";").append(fields[1]).append(";");
+                enrichedMessage.append(generateRegist(fields[0])).append(";");
+                for (int i = 2; i < fields.length; i ++) {
+                    if (i < fields.length - 1)
+                        enrichedMessage.append(fields[i]).append(";");
+                    else
+                        enrichedMessage.append(fields[i]);
+                }
+                return enrichedMessage.toString();
+            }
+            
+            private String generateRegist(String car_id) {
+                StringBuilder regist = new StringBuilder();
+                Random random = new Random();
+                // Regist XX-YY
+                for (int i = 0; i < 5; i++) {
+                    if (i == 2)
+                        regist.append("-");
+                    else {
+                        char letter = (char) (random.nextInt(26) + 'A');
+                        regist.append(Character.toString(letter));
+                    }
+                }
+                String new_car_id = new DecimalFormat("00").format(Integer.parseInt(car_id));
+                // Regist XX-YY-ZZ
+                return regist.append("-").append(new_car_id).toString();
             }
         });
     }
