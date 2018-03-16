@@ -26,9 +26,9 @@ public class Message {
         this.message = message;
     }
     
-    public String enrichMessage(String data) {
+    public void enrichMessage() {
         StringBuilder enrichedMessage = new StringBuilder();
-        String[] fields = data.split(";");
+        String[] fields = this.message.split(";");
         // Add car_id and time
         enrichedMessage.append(fields[0]).append(";").append(fields[1]).append(";");
         enrichedMessage.append(generateRegist(fields[0])).append(";");
@@ -39,7 +39,11 @@ public class Message {
                 enrichedMessage.append(fields[i]);
             }
         }
-        return enrichedMessage.toString();
+        //append max speed
+        if(fields[2].equals("01")){
+            enrichedMessage.append(";100");
+        }
+        this.message = enrichedMessage.toString();
     }
             
     private String generateRegist(String car_id) {

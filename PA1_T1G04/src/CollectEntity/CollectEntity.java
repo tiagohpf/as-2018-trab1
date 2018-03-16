@@ -113,7 +113,7 @@ public class CollectEntity extends javax.swing.JFrame {
 
         //Properties
         Properties props = new Properties();
-        props.put("bootstrap.servers", "localhost:9092,localhost:9093");
+        props.put("bootstrap.servers", "localhost:9092,localhost:9093,localhost:9094,localhost:9095");
         props.put("key.serializer", "org.apache.kafka.common.serialization.StringSerializer");
         props.put("value.serializer", "CollectEntity.MessageSerializer");
         Producer<String, Message> producer = new KafkaProducer<>(props);

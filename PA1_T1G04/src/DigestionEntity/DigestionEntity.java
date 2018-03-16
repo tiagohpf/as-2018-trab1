@@ -1,13 +1,14 @@
 package DigestionEntity;
 
 import CollectEntity.Message;
-import java.text.DecimalFormat;
 import java.util.Arrays;
 import java.util.Properties;
-import java.util.Random;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
+import org.apache.kafka.clients.producer.KafkaProducer;
+import org.apache.kafka.clients.producer.Producer;
+import org.apache.kafka.clients.producer.ProducerRecord;
 
 /**
  *
@@ -61,6 +62,49 @@ public class DigestionEntity extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private static void sendMessage(Message message) {
+        //Produce messages to topic EnrichedTopic
+        String[] fields = message.getMessage().split(";");
+
+        //All Messages must go to Batch and Report entity
+        
+        //Properties for BATCH
+        String topicName = "EnrichedTopic1";
+        String key = "batchproducer";
+        Properties Batchprops = new Properties();
+        Batchprops.put("bootstrap.servers", "localhost:9092,localhost:9093,localhost:9094,localhost:9095");
+        Batchprops.put("key.serializer", "org.apache.kafka.common.serialization.StringSerializer");
+        Batchprops.put("value.serializer", "CollectEntity.MessageSerializer");
+        Producer<String, Message> Batchproducer = new KafkaProducer<>(Batchprops);
+        ProducerRecord<String, Message> record;
+        
+        //Properties for REPORT
+        
+        //Properties for ALARM
+        
+        switch (fields[3]) {
+            case "00":
+                Batchprops.put("acks", "0");
+                 record = new ProducerRecord<>(topicName, key, message);
+                Batchproducer.send(record);
+                jTextArea1.append("\nSending " + message.getMessage()+"\n");
+                break;
+            case "01":
+                Batchprops.put("acks", "all");
+                record = new ProducerRecord<>(topicName, key, message);
+                Batchproducer.send(record);
+                jTextArea1.append("\nSending " + message.getMessage()+"\n");
+                break;
+            case "02":
+                Batchprops.put("acks", "all");
+                record = new ProducerRecord<>(topicName, key, message);
+                Batchproducer.send(record);
+                jTextArea1.append("\nSending " + message.getMessage()+"\n");
+                break;
+        }
+
+    }
+
     /**
      * @param args the command line arguments
      */
@@ -99,13 +143,14 @@ public class DigestionEntity extends javax.swing.JFrame {
 
                 //Properties
                 Properties propsConsumer = new Properties();
-                propsConsumer.put("bootstrap.servers", "localhost:9092,localhost:9093");
+                propsConsumer.put("bootstrap.servers", "localhost:9092,localhost:9093,localhost:9094,localhost:9095");
                 propsConsumer.put("group.id", groupConsumerName);
                 propsConsumer.put("key.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
                 propsConsumer.put("value.deserializer", "CollectEntity.MessageDeserializer");
 
                 KafkaConsumer<String, Message> consumer = new KafkaConsumer<>(propsConsumer);
-                consumer.subscribe(Arrays.asList(topicConsumerName));
+                RebalanceListener rebalanceListener = new RebalanceListener(consumer);
+                consumer.subscribe(Arrays.asList(topicConsumerName), rebalanceListener);
 
                 //Tudo o que aparece dentro da text área é tratado aqui, inclusive o consumidor para outras coisas.
                 Thread thread = new Thread() {
@@ -113,8 +158,11 @@ public class DigestionEntity extends javax.swing.JFrame {
                         while (true) {
                             ConsumerRecords<String, Message> records = consumer.poll(100);
                             for (ConsumerRecord<String, Message> record : records) {
-                                String message = record.value().getMessage();
-                                jTextArea1.append(message + "\n");
+                                jTextArea1.append(record.value().getMessage() + "\n");
+                                record.value().enrichMessage();
+                                sendMessage(record.value());
+                                //commit offsets
+                                rebalanceListener.addOffset(record.topic(), record.partition(), record.offset());
                             }
                         }
                     }

@@ -3,11 +3,12 @@ Created parser for files
 Created Message Class which contains a Array with messages.
 Send messages to EnrichTopic with kafka (ALL)
 Digestor Created
-
-
-To-do
 Fix Scripts
 Enrich Message
 Create Enriched Topics
-Send Messages
 Rebalance Listener kafka to ensure non reprocessing
+Sending Messages to Batch
+
+
+To-do
+Implement Alarm and report entities
