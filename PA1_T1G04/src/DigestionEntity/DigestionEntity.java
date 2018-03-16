@@ -62,12 +62,19 @@ public class DigestionEntity extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private static boolean isHB(Message message) {
+        String[] fields = message.getMessage().split(";");
+        if (fields[3].equals("00")) {
+            return true;
+        }
+        return false;
+    }
+
     private static void sendMessage(Message message) {
         //Produce messages to topic EnrichedTopic
         String[] fields = message.getMessage().split(";");
 
         //All Messages must go to Batch and Report entity
-        
         //Properties for BATCH
         String topicName = "EnrichedTopic1";
         String key = "batchproducer";
@@ -77,29 +84,27 @@ public class DigestionEntity extends javax.swing.JFrame {
         Batchprops.put("value.serializer", "CollectEntity.MessageSerializer");
         Producer<String, Message> Batchproducer = new KafkaProducer<>(Batchprops);
         ProducerRecord<String, Message> record;
-        
+
         //Properties for REPORT
-        
         //Properties for ALARM
-        
         switch (fields[3]) {
             case "00":
                 Batchprops.put("acks", "0");
-                 record = new ProducerRecord<>(topicName, key, message);
+                record = new ProducerRecord<>(topicName, key, message);
                 Batchproducer.send(record);
-                jTextArea1.append("\nSending " + message.getMessage()+"\n");
+                jTextArea1.append("\nSending " + message.getMessage() + "\n");
                 break;
             case "01":
                 Batchprops.put("acks", "all");
                 record = new ProducerRecord<>(topicName, key, message);
                 Batchproducer.send(record);
-                jTextArea1.append("\nSending " + message.getMessage()+"\n");
+                jTextArea1.append("\nSending " + message.getMessage() + "\n");
                 break;
             case "02":
                 Batchprops.put("acks", "all");
                 record = new ProducerRecord<>(topicName, key, message);
                 Batchproducer.send(record);
-                jTextArea1.append("\nSending " + message.getMessage()+"\n");
+                jTextArea1.append("\nSending " + message.getMessage() + "\n");
                 break;
         }
 
@@ -161,8 +166,10 @@ public class DigestionEntity extends javax.swing.JFrame {
                                 jTextArea1.append(record.value().getMessage() + "\n");
                                 record.value().enrichMessage();
                                 sendMessage(record.value());
-                                //commit offsets
-                                rebalanceListener.addOffset(record.topic(), record.partition(), record.offset());
+                                //commit offsets 
+                                if (!isHB(record.value())) {
+                                    rebalanceListener.addOffset(record.topic(), record.partition(), record.offset());
+                                }
                             }
                         }
                     }

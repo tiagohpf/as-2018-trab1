@@ -9,12 +9,13 @@ import java.util.Random;
  * @author Tiago Faria
  */
 public class Message {
+
     private String message;
 
     public Message() {
     }
-    
-    public Message(String message){
+
+    public Message(String message) {
         this.message = message;
     }
 
@@ -25,7 +26,7 @@ public class Message {
     public void setMessage(String message) {
         this.message = message;
     }
-    
+
     public void enrichMessage() {
         StringBuilder enrichedMessage = new StringBuilder();
         String[] fields = this.message.split(";");
@@ -40,20 +41,20 @@ public class Message {
             }
         }
         //append max speed
-        if(fields[2].equals("01")){
+        if (fields[2].equals("01")) {
             enrichedMessage.append(";100");
         }
         this.message = enrichedMessage.toString();
     }
-            
+
     private String generateRegist(String car_id) {
         StringBuilder regist = new StringBuilder();
         Random random = new Random();
         // Regist XX-YY
         for (int i = 0; i < 5; i++) {
-            if (i == 2)
+            if (i == 2) {
                 regist.append("-");
-            else {
+            } else {
                 char letter = (char) (random.nextInt(26) + 'A');
                 regist.append(Character.toString(letter));
             }
