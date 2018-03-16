@@ -7,8 +7,7 @@ Fix Scripts
 Enrich Message
 Create Enriched Topics
 Rebalance Listener kafka to ensure non reprocessing
-Sending Messages to Batch
-
+Implemented Batch Alarm and Report Entities
 
 To-do
-Implement Alarm and report entities
+Review Code

@@ -9,6 +9,7 @@ import org.apache.kafka.clients.consumer.KafkaConsumer;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.Producer;
 import org.apache.kafka.clients.producer.ProducerRecord;
+import org.apache.kafka.clients.producer.RecordMetadata;
 
 /**
  *
@@ -75,7 +76,7 @@ public class DigestionEntity extends javax.swing.JFrame {
         String[] fields = message.getMessage().split(";");
 
         //All Messages must go to Batch and Report entity
-        //Properties for BATCH
+        //Properties for BATCH and ALARM entities
         String topicName = "EnrichedTopic1";
         String key = "batchproducer";
         Properties Batchprops = new Properties();
@@ -85,25 +86,68 @@ public class DigestionEntity extends javax.swing.JFrame {
         Producer<String, Message> Batchproducer = new KafkaProducer<>(Batchprops);
         ProducerRecord<String, Message> record;
 
-        //Properties for REPORT
-        //Properties for ALARM
+        //Properties for Report
         switch (fields[3]) {
             case "00":
+                //Send to Batch
                 Batchprops.put("acks", "0");
                 record = new ProducerRecord<>(topicName, key, message);
                 Batchproducer.send(record);
+
+                //Send to Report
+                record = new ProducerRecord<>("EnrichedTopic3", key, message);
+                Batchproducer.send(record);
+
                 jTextArea1.append("\nSending " + message.getMessage() + "\n");
                 break;
             case "01":
                 Batchprops.put("acks", "all");
+
+                //Send to Batch
+                record = new ProducerRecord<>(topicName, key, message);
+                try {
+                    RecordMetadata metadata = Batchproducer.send(record).get();
+                } catch (Exception e) {
+                    System.err.println("Synchronous fail!");
+                }
+
+                //Send to Alarm
                 record = new ProducerRecord<>("EnrichedTopic2", key, message);
-                Batchproducer.send(record);
+                try {
+                    RecordMetadata metadata = Batchproducer.send(record).get();
+                } catch (Exception e) {
+                    System.err.println("Synchronous fail!");
+                }
+                
+                //Send to Report
+                record = new ProducerRecord<>("EnrichedTopic3", key, message);
+                try {
+                    RecordMetadata metadata = Batchproducer.send(record).get();
+                } catch (Exception e) {
+                    System.err.println("Synchronous fail!");
+                }
+
                 jTextArea1.append("\nSending " + message.getMessage() + "\n");
                 break;
             case "02":
+
+                //Send to Batch
                 Batchprops.put("acks", "all");
                 record = new ProducerRecord<>(topicName, key, message);
-                Batchproducer.send(record);
+                try {
+                    RecordMetadata metadata = Batchproducer.send(record).get();
+                } catch (Exception e) {
+                    System.err.println("Synchronous fail!");
+                }
+
+                //Send to Report
+                record = new ProducerRecord<>("EnrichedTopic3", key, message);
+                try {
+                    RecordMetadata metadata = Batchproducer.send(record).get();
+                } catch (Exception e) {
+                    System.err.println("Synchronous fail!");
+                }
+
                 jTextArea1.append("\nSending " + message.getMessage() + "\n");
                 break;
         }
