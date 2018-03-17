@@ -164,6 +164,7 @@ public class AlarmEntity extends javax.swing.JFrame {
                                 record.value().enrichMessageWithAlarm(new_status);
                                 jTextArea1.append(record.value().getMessage() + "\n");
                             }
+                            consumer.commitSync();
                         }
                     }
                 };

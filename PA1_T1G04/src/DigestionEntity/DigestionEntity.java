@@ -215,6 +215,7 @@ public class DigestionEntity extends javax.swing.JFrame {
                                     rebalanceListener.addOffset(record.topic(), record.partition(), record.offset());
                                 }
                             }
+                            consumer.commitSync();
                         }
                     }
                 };

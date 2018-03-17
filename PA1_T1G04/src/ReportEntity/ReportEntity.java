@@ -172,6 +172,7 @@ public class ReportEntity extends javax.swing.JFrame {
                                 //commit offsets
                                 rebalanceListener.addOffset(record.topic(), record.partition(), record.offset());
                             }
+                            consumer.commitSync();
                         }
                     }
                 };
