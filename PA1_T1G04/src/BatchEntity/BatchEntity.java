@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package BatchEntity;
 
 import CollectEntity.Message;
@@ -21,7 +16,8 @@ import org.apache.kafka.clients.consumer.KafkaConsumer;
 
 /**
  *
- * @author kanto
+ * @author José Santos
+ * @author Tiago Faria
  */
 public class BatchEntity extends javax.swing.JFrame {
 

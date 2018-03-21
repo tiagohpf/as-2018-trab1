@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package CollectEntity;
 
 import java.io.File;
@@ -19,7 +14,8 @@ import org.apache.kafka.clients.producer.RecordMetadata;
 
 /**
  *
- * @author kanto
+ * @author José Santos
+ * @author Tiago Faria
  */
 public class CollectEntity extends javax.swing.JFrame {
 
