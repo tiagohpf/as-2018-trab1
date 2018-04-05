@@ -54,7 +54,7 @@ public class DigestionEntity extends javax.swing.JFrame {
         jTextArea2.setRows(5);
         jScrollPane2.setViewportView(jTextArea2);
 
-        jLabel2.setText("Messages sent:");
+        jLabel2.setText("Messages received:");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);

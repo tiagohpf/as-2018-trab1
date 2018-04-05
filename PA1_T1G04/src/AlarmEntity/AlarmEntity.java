@@ -163,19 +163,24 @@ public class AlarmEntity extends javax.swing.JFrame {
                                 int current_speed = Integer.parseInt(fields[4]);
                                 String new_status = null;
                                 // If the messages aren't in the HashMap, add them
-                                if (status.get(car_id) == null) {
+                                if (!status.containsKey(car_id)) {
                                     if (current_speed > max_speed) {
                                         new_status = "ON";
                                         // If the new regist exceeds the max_speed, trigger the alarm
                                         jTextArea1.append(record.value().triggerAlarm(car_id, new_status));
-                                    } else
+                                    } else {
                                         new_status = "OFF";
-                                } 
-                                // Trigger alarm in case of changing its status
+                                    }
+                                } // Trigger alarm in case of changing its status
                                 else {
-                                    Map.Entry<Integer, String> speed_status = 
-                                            status.get(car_id).entrySet().iterator().next();
+                                    Map.Entry<Integer, String> speed_status
+                                            = status.get(car_id).entrySet().iterator().next();
                                     String old_status = speed_status.getValue();
+
+                                    /*if(old_status == null){
+                                        System.out.println(old_status+"\n");
+                                        System.exit(40);
+                                    }*/
                                     if (current_speed > max_speed && old_status.equals("OFF")) {
                                         new_status = "ON";
                                         jTextArea1.append(record.value().triggerAlarm(car_id, new_status));
@@ -184,12 +189,15 @@ public class AlarmEntity extends javax.swing.JFrame {
                                         jTextArea1.append(record.value().triggerAlarm(car_id, new_status));
                                     }
                                 }
-                                // Push new changes
-                                Map<Integer, String> speed_status = new HashMap<>();
-                                speed_status.put(current_speed, new_status);
-                                status.put(car_id, speed_status);
-                                record.value().enrichMessageWithAlarm(new_status);
-                                jTextArea1.append(record.value().getMessage() + "\n");
+                                // Push new changes if there is a new status
+                                if (new_status != null) {
+                                    Map<Integer, String> speed_status = new HashMap<>();
+                                    speed_status.put(current_speed, new_status);
+                                    status.put(car_id, speed_status);
+                                    record.value().enrichMessageWithAlarm(new_status);
+                                    jTextArea1.append(record.value().getMessage() + "\n");
+                                }
+
                             }
                             consumer.commitSync();
                         }
