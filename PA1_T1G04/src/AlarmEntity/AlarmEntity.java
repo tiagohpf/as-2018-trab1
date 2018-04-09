@@ -199,7 +199,7 @@ public class AlarmEntity extends javax.swing.JFrame {
                                 }
 
                             }
-                            consumer.commitSync();
+                            consumer.commitSync(rebalanceListener.getCurrentOffsets());
                         }
                     }
                 };
