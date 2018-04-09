@@ -28,6 +28,14 @@ public class BatchEntity extends javax.swing.JFrame {
         initComponents();
     }
 
+    private static boolean isHBorStatus(Message message) {
+        String[] fields = message.getMessage().split(";");
+        if (fields[3].equals("00") || fields[3].equals("02")) {
+            return true;
+        }
+        return false;
+    }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -147,15 +155,17 @@ public class BatchEntity extends javax.swing.JFrame {
                             for (ConsumerRecord<String, Message> record : records) {
                                 jTextArea1.append(record.value().getMessage() + "\n");
                                 try {
-                                    bw.write(record.value().getMessage()+"\n");
+                                    bw.write(record.value().getMessage() + "\n");
                                     bw.flush();
                                 } catch (IOException ex) {
                                     Logger.getLogger(BatchEntity.class.getName()).log(Level.SEVERE, null, ex);
                                 }
                                 //commit offsets
-                                rebalanceListener.addOffset(record.topic(), record.partition(), record.offset());
+                                if (!isHBorStatus(record.value())) {
+                                    rebalanceListener.addOffset(record.topic(), record.partition(), record.offset());
+                                }
                             }
-                            consumer.commitSync(rebalanceListener.getCurrentOffsets());
+                            consumer.commitSync();
                         }
                     }
                 };

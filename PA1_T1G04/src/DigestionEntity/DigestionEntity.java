@@ -91,9 +91,9 @@ public class DigestionEntity extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private static boolean isHB(Message message) {
+    private static boolean isHBorStatus(Message message) {
         String[] fields = message.getMessage().split(";");
-        if (fields[3].equals("00")) {
+        if (fields[3].equals("00") || fields[3].equals("02")) {
             return true;
         }
         return false;
@@ -239,11 +239,11 @@ public class DigestionEntity extends javax.swing.JFrame {
                                 record.value().enrichMessageWithReg();
                                 sendMessage(record.value());
                                 //commit offsets 
-                                if (!isHB(record.value())) {
+                                if (!isHBorStatus(record.value())) {
                                     rebalanceListener.addOffset(record.topic(), record.partition(), record.offset());
                                 }
                             }
-                            consumer.commitSync(rebalanceListener.getCurrentOffsets());
+                            consumer.commitSync();
                         }
                     }
                 };
