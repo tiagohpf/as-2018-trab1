@@ -10,7 +10,7 @@ source-code and text files.
 ## How to Run
 1. Clean and build the project
 2. Open terminal on Scripts directory and then run:
-	2.1 Run star_zookeeper.sh
-	2.2 Run run_brokers.sh
-	2.3 Run create_topics.sh
+	- Run star_zookeeper.sh
+	- Run run_brokers.sh
+	- Run create_topics.sh
 3. Run all the entities
