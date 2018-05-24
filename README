@@ -1,20 +1,16 @@
-DESCRIPTION
-The following assignment implements a centralized control plataform to supervise the status of cars. Periodically, each car sends information
+# Centralized Control Platform with Kafka
+
+Implementation of a centralized control plataform, using [KAFKA](https://kafka.apache.org/) to supervise the status of cars. Periodically, each car sends information
 which is collected and processed by this plataform.
 
-STRUCTURE OF THE PROJECT
+## Structure of the Project
 The root of the project is PA1_T1G04. Inside this directory are the KAFKA's library (kafka_2.11-1.0.1) and the src directory where is all the
 source-code and text files.
 
-HOW TO RUN
+## How to Run
 1. Clean and build the project
 2. Open terminal on Scripts directory and then run:
 	2.1 Run star_zookeeper.sh
 	2.2 Run run_brokers.sh
 	2.3 Run create_topics.sh
 3. Run all the entities
-
-AUTHORS
-Tiago Faria - 73714, tiagohpf@ua.pt
-José Santos - 89129, jes@ua.pt
-
