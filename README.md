@@ -1,4 +1,4 @@
-# Centralized Control Platform with Kafka
+# Centralized Control Platform with KAFKA
 
 Implementation of a centralized control plataform, using [KAFKA](https://kafka.apache.org/) to supervise the status of cars. Periodically, each car sends information
 which is collected and processed by this plataform.
